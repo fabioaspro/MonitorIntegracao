@@ -3,7 +3,7 @@
         <form [formGroup]="form">
             <div class="campofiltros" >
                 <po-input name="cChave" formControlName="cChave"  style="width: 300px;" p-label="Chave">       </po-input>
-                <po-button p-tooltip="Efetuar Busca de Dados"  name='btBusca' [p-disabled]="lBotao" style="margin-right: 50px" p-icon="bi bi-zoom-in" p-kind="primary" (p-click)="ChamaObterDados()" p-label="Buscar" ></po-button>
+                <po-button p-tooltip="Efetuar Busca Paginação" name='btBusca' [p-disabled]="lBotao" style="margin-right: 50px" p-icon="bi bi-zoom-in" p-kind="primary" (p-click)="ChamaObterDadosPag()" p-label="Buscar" ></po-button>
             </div>
         </form>
     </div>
@@ -46,7 +46,9 @@
                 [p-selectable]="true"
                 (p-selected)="changeOptions($event)"
                 [p-height]="alturaGrid"
-                [p-loading]="loadTela" 
+                [p-loading]="loadTela"
+                (p-show-more)="loadMoreItens()"
+                [p-show-more-disabled]="disableShowMore" 
                 >
                             
         <ng-template p-table-cell-template let-column="column" let-row="row">

@@ -32,18 +32,18 @@ export class ServerTotvsService {
   obterColunas(): Array<PoTableColumn> {
     return [
       { property: 'idBatch',       label: "IDBatch", type: 'number', format: "1.0-0", visible: false},
-      { property: 'Chave',         label: "Chave"},
+      { property: 'Chave',         label: "Chave", visible: false},
       { property: 'Estab',         label: "Estab"},
       { property: 'numOS',         label: "NumOS"},
       { property: 'serie',         label: "Série"},
       { property: 'itCodigo',      label: "Item"},
       { property: 'nrEnc',         label: "ENC"},     
       { property: 'Integracao',    label: "Integracao"},
-      { property: 'Lote',          label: "Lote"}, //,  type: 'number', format: "1.2-2"},
-      { property: 'DtHrInc',       label: "DtHrInc"},
-      { property: 'DtHrEnv',       label: "DtHrEnv"},
+      { property: 'Lote',          label: "Lote"},
+      { property: 'DtHrInc',       label: "DtHrInc", type:'date', format: "dd/MM/yyyy"},
+      { property: 'DtHrEnv',       label: "DtHrEnv", type:'date', format: "dd/MM/yyyy"},
       { property: 'Pendente',      label: "Pendente"},
-      { property: 'Origem',        label: 'Origem'}, //}  type: 'cellTemplate' },
+      { property: 'Origem',        label: 'Origem', visible: false}, 
       { property: 'QtdReprocessa', label: "QtdReprocessa"},
     ];
   }
@@ -51,10 +51,10 @@ export class ServerTotvsService {
   obterColunasError(): Array<PoTableColumn> {
     return [
       { property: 'idBatch',       label: "ID", type: 'number', format: "1.0-0", visible: false},
-      { property: 'SeqError',      label: "Seq"}, //,  type: 'number', format: "1.2-2"},
+      { property: 'SeqError',      label: "Seq"},
       { property: 'msgErro',       label: "Msg Error"},
       { property: 'Erro',          label: "Erro"},
-      { property: 'DtHrError',     label: "Dt/Hr Error"},
+      { property: 'DtHrError',     label: "Dt/Hr Error", type:'date', format: "dd/MM/yyyy"},
     ];
   }
   //---------------------- Obter Lista Completa
@@ -82,8 +82,8 @@ export class ServerTotvsService {
   }
 
   //Usando paginação
-  public ObterDadosP(params?: any){
-    return this.http.post(`${this._url}/ObterDadosP`, params, {headers:headersTotvs}).pipe(take(1))
+  public ObterDadosPag(params?: any){
+    return this.http.post(`${this._url}/ObterDadosPag`, params, {headers:headersTotvs}).pipe(take(1))
   }
   
   //abaixo não é usado, só exemplo

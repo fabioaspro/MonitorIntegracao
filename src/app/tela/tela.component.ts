@@ -54,11 +54,17 @@ export class TelaComponent {
   pesquisa!: string
   nomeBotao: any;
   lBotao: boolean = false
-  alturaGrid: number = window.innerHeight - 770
-  alturaError: number = window.innerHeight - 770
+  alturaGrid: number = window.innerHeight - 410
+  alturaError: number = window.innerHeight - 660
   objSelecionado:any
   lDisable: boolean = false
   idBatch!: number | null
+
+  //paginação do grid
+  itensPaginados = []
+  page = 1
+  pageSize = 20
+  disableShowMore = false
 
   /*headersTotvs = {    
     'Authorization': 'Basic c3VwZXI6cHJvZGllYm9sZDEx',
@@ -97,7 +103,9 @@ export class TelaComponent {
   };
 
   customLiterals: PoTableLiterals = {
-    noData: 'Infome os filtros para Buscar os Dados'
+    noData: 'Infome os filtros para Buscar os Dados',
+    loadMoreData: 'Carregar mais',
+    loadingData: 'Buscar '
   };
 
   //Formulario
@@ -132,8 +140,7 @@ export class TelaComponent {
   }*/
 
     changeOptions(event: any): void {
-      console.log("dentro")
-
+      
       this.ChamaObterDadosError(event.idBatch)
       /*
       if (type === 'new') {
@@ -188,6 +195,67 @@ export class TelaComponent {
     this.colunas = this.srvTotvs.obterColunas()
     this.colunasError = this.srvTotvs.obterColunasError()
 
+  }
+
+  loadMoreItens(){
+
+    this.labelLoadTela = "Carregando Dados"
+     
+    this.loadTela = true
+    this.desabilitaForm()
+    let paramsTela: any = { items: this.form.value, page: this.page, pageSize: this.pageSize }
+
+    this.srvTotvs.ObterDadosPag(paramsTela).subscribe({
+      next: (response: any) => {
+        
+        this.srvNotification.success('Dados listados com sucesso !')
+        //this.lista = response.items
+        this.loadTela = false
+        this.lista = this.page === 1 ? response.items : [...this.lista, ...response.items]
+
+        this.disableShowMore = response.items.length < this.pageSize
+        this.page++;
+        this.habilitaForm()
+        console.log(this.lista)
+        this.ChamaObterDadosError(this.lista[0].idBatch)
+      },
+      error: (e) => {
+        //this.srvNotification.error('Ocorreu um erro ObterDadosPag: ' + e)
+        this.loadTela = false
+        this.habilitaForm()
+      },
+    })
+    /*
+    this.labelLoadTela = "Carregando Dados..."
+    this.loadTela = true
+    this.desabilitaForm()
+    let paramsTela: any = { items: this.form.value }
+    //Chamar o servico
+    this.srvTotvs.ObterDados(paramsTela).subscribe({
+      next: (response: any) => {
+        this.srvNotification.success('Dados listados com sucesso !')
+        this.lista = response.items
+        this.lista.sort(this.srvTotvs.ordenarCampos(['DtHrInc']))        
+        this.loadTela = false
+        this.habilitaForm()
+        this.ChamaObterDadosError(this.lista[0].idBatch)
+      },
+      error: (e) => {
+        //this.srvNotification.error('Ocorreu um erro ObterDados: ' + e)
+        this.loadTela = false
+        this.habilitaForm()
+      },
+    }) 
+    */
+
+  }
+
+  ChamaObterDadosPag(){
+    this.itensPaginados = []
+    this.page = 1
+    this.pageSize = 20
+    this.lista = []
+    this.loadMoreItens()
   }
 
   ChamaObterDadosError(iId: any){
