@@ -1,2 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
-@import "../node_modules/bootstrap-icons/font/bootstrap-icons.css"
+@import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
+:root {
+    
+    /*Cores padrão DN*/
+    --color-01: #004b87;
+    --color-02: #0088b9;
+    --color-03: #470a68;
+    --color-04: #702876;
+    --color-05: #a51f66;
+    --color-06: #f185ce;
+    --color-07: #a6192e;
+    --color-08: #f99e1d;
+    --color-09: #0088b9;
+    --color-10: #007a87;
+
+    /*
+    --color-feedback-info-lightest: #f6e6e5;
+    --color-feedback-info-lighter: #e3aeab;
+    --color-feedback-info-light: #d58581;
+    --color-feedback-info-base: #be3e37;
+    --color-feedback-info-dark: #9b2d27;
+    --color-feedback-info-darker: #72211d;
+    --color-feedback-info-darkest: #4a1512;
+    */
+
+}

@@ -28,27 +28,68 @@ export class ServerTotvsService {
     return this.http.get('/totvs-menu/rest/exec', { params, headers: headersTotvs }).pipe(take(1));
   }
   
-  //------------ Colunas Grid Prioridade
-  obterColunas(): Array<PoTableColumn> {
+  //------------ Colunas Grid ESAA052
+  obterColunasEsaa052(): Array<PoTableColumn> {
+    return [
+      { property: 'idBatch',       label: "idBatch", type: 'number', visible: false},
+      { property: 'Chave',         label: "Chave", visible: false},
+      { property: 'Integracao',    type:'label', width: '150px',
+        labels: [
+          { value: 'int001', label: 'Envio'      , icon: 'bi bi-send' },
+          { value: 'int002', label: 'Recebimento', icon: 'bi bi-cloud-download'}
+        ]
+      },
+      { property: 'Estab',         label: "Estab"},
+      { property: 'serie',         label: "Série", width: '80px'},
+      { property: 'numOS',         label: "NumOS/Nota"},
+      { property: 'itCodigo',      label: "Item/Tipo"},
+      { property: 'nrEnc',         label: "ENC"},     
+      { property: 'Lote',          label: "Lote"},
+      { property: 'DtHrInc',       label: "DtHrInc",  type:'date', format: "dd/MM/yyyy"},
+      { property: 'DtHrEnv',       label: "DtHrEnv",  type:'date', format: "dd/MM/yyyy"},
+      { property: 'QtdReprocessa', label: "QtdReprocessa", width: '150px'},
+      { property: 'Pendente',      type:'label',
+          labels: [
+            { value: 'true',  textColor: 'white', color: 'color-07', label: 'Pendente' },
+            { value: 'false', textColor: 'white', color: 'color-10', label: 'Enviado' }
+          ]
+        },
+      { property: 'Origem',        label: 'Origem', visible: false}, 
+      
+    ];
+  }
+
+  obterColunasErrorEsaa052(): Array<PoTableColumn> {
+    return [
+      { property: 'idBatch',       label: "ID", type: 'number', format: "1.0-0", visible: false},
+      { property: 'SeqError',      label: "Seq"},
+      { property: 'msgErro',       label: "Msg Error"},
+      { property: 'Erro',          label: "Erro"},
+      { property: 'DtHrError',     label: "Dt/Hr Error", type:'date', format: "dd/MM/yyyy"},
+    ];
+  }
+
+  //------------ Colunas Grid ESAA068
+  obterColunasEsaa068(): Array<PoTableColumn> {
     return [
       { property: 'idBatch',       label: "IDBatch", type: 'number', format: "1.0-0", visible: false},
-      { property: 'Chave',         label: "Chave", visible: false},
+      { property: 'Chave',         label: "Chave", visible: true},
       { property: 'Estab',         label: "Estab"},
-      { property: 'numOS',         label: "NumOS"},
-      { property: 'serie',         label: "Série"},
-      { property: 'itCodigo',      label: "Item"},
-      { property: 'nrEnc',         label: "ENC"},     
+      { property: 'numOS',         label: "NumOS", visible: false},
+      { property: 'serie',         label: "Série", visible: false},
+      { property: 'itCodigo',      label: "Item", visible: false},
+      { property: 'nrEnc',         label: "ENC", visible: false},     
       { property: 'Integracao',    label: "Integracao"},
       { property: 'Lote',          label: "Lote"},
       { property: 'DtHrInc',       label: "DtHrInc", type:'date', format: "dd/MM/yyyy"},
       { property: 'DtHrEnv',       label: "DtHrEnv", type:'date', format: "dd/MM/yyyy"},
       { property: 'Pendente',      label: "Pendente"},
       { property: 'Origem',        label: 'Origem', visible: false}, 
-      { property: 'QtdReprocessa', label: "QtdReprocessa"},
+      { property: 'QtdReprocessa', label: "QtdReprocessa", visible: false},
     ];
   }
 
-  obterColunasError(): Array<PoTableColumn> {
+  obterColunasErrorEsaa068(): Array<PoTableColumn> {
     return [
       { property: 'idBatch',       label: "ID", type: 'number', format: "1.0-0", visible: false},
       { property: 'SeqError',      label: "Seq"},
@@ -73,17 +114,31 @@ export class ServerTotvsService {
   }
 
   //---------------------- Obter Lista Completa
-  public ObterDados(params?: any){
-    return this.http.post(`${this._url}/ObterDados`, params, {headers:headersTotvs}).pipe(take(1))
+  public ObterDadosEsaa052(params?: any){
+    return this.http.post(`${this._url}/ObterDadosEsaa052`, params, {headers:headersTotvs}).pipe(take(1))
   }
 
-  public ObterDadosError(params?: any){
-    return this.http.post(`${this._url}/ObterDadosError`, params, {headers:headersTotvs}).pipe(take(1))
+  public ObterDadosErrorEsaa052(params?: any){
+    return this.http.post(`${this._url}/ObterDadosErrorEsaa052`, params, {headers:headersTotvs}).pipe(take(1))
   }
 
   //Usando paginação
-  public ObterDadosPag(params?: any){
-    return this.http.post(`${this._url}/ObterDadosPag`, params, {headers:headersTotvs}).pipe(take(1))
+  public ObterDadosPagEsaa052(params?: any){
+    return this.http.post(`${this._url}/ObterDadosPagEsaa052`, params, {headers:headersTotvs}).pipe(take(1))
+  }
+
+  //---------------------- Obter Lista Completa
+  public ObterDadosEsaa068(params?: any){
+    return this.http.post(`${this._url}/ObterDadosEsaa068`, params, {headers:headersTotvs}).pipe(take(1))
+  }
+
+  public ObterDadosErrorEsaa068(params?: any){
+    return this.http.post(`${this._url}/ObterDadosErrorEsaa068`, params, {headers:headersTotvs}).pipe(take(1))
+  }
+
+  //Usando paginação
+  public ObterDadosPagEsaa068(params?: any){
+    return this.http.post(`${this._url}/ObterDadosPagEsaa068`, params, {headers:headersTotvs}).pipe(take(1))
   }
   
   //abaixo não é usado, só exemplo

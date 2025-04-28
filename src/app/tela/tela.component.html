@@ -1,37 +1,85 @@
+<po-toolbar p-title="MONITOR DE INTEGRAÇÃO - TOTVS"></po-toolbar>
 <div class="cabec" >
     <div class="tipoBusca">
-        <form [formGroup]="form">
-            <div class="campofiltros" >
-                <po-input name="cChave" formControlName="cChave"  style="width: 300px;" p-label="Chave">       </po-input>
-                <po-button p-tooltip="Efetuar Busca Paginação" name='btBusca' [p-disabled]="lBotao" style="margin-right: 50px" p-icon="bi bi-zoom-in" p-kind="primary" (p-click)="ChamaObterDadosPag()" p-label="Buscar" ></po-button>
-            </div>
+        <form [formGroup]="form" class="campofiltros">
+              <po-datepicker
+                  class="po-md-4"
+                  name="dtIni"
+                  formControlName="dtIni"
+                  p-label="Data Inicial"
+                  p-placeholder="dd/mm/yyyy"
+                  p-format="dd/mm/yyyy"
+                  [(ngModel)]="dataIni"
+                  p-required
+                  />
+                  <po-datepicker
+                  class="po-md-4"
+                  name="dtFim"
+                  formControlName="dtFim"
+                  p-label="Data Final"
+                  p-format="dd/mm/yyyy"
+                  p-placeholder="dd/mm/yyyy"
+                  [(ngModel)]="dataFim"
+                  p-required
+                  />
+
+              <po-field-container style='margin-top: 15px'>
+                <po-checkbox 
+                  name="cPendente" 
+                  p-label="Pendente"
+                  formControlName="lPendente"
+                  (p-change)="ChamaObterDadosPagEsaa052()"
+                  >
+                </po-checkbox>
+                <p style="margin-top: 10px;"></p>
+                <po-checkbox 
+                  name="cEnviado" 
+                  formControlName="lEnviado"
+                  p-label="Enviado"
+                  (p-change)="ChamaObterDadosPagEsaa052()"
+                  > 
+              </po-checkbox>
+              </po-field-container>
+              
+              <po-combo name="cIntegra"
+                        formControlName="cIntegra" 
+                        p-label="Integração"
+                        p-icon="bi bi-gear"
+                        class="po-md-6"
+                        p-clean="true"
+                        (p-change)="ChamaObterDadosPagEsaa052()"
+                        p-placeholder="Selecione o Tipo Integração"
+                        [p-options]="[
+                          { value: 'Todas as Integrações', icon: 'bi bi-gear'}, 
+                          { value: 'Envio de Saldo', icon: 'bi bi-send' },
+                          { value: 'Recebimento de OS', icon: 'bi bi-cloud-download' }
+                        ]"
+                      > 
+              </po-combo>
+              
+              <po-button style='margin-top: 30px' p-tooltip="Efetuar Busca" name='btBusca' [p-disabled]="lBotao"  p-icon="bi bi-zoom-in" p-kind="primary" (p-click)="ChamaObterDadosPagEsaa052()" p-label="Buscar" ></po-button>
+            
         </form>
     </div>
     
     <div class="campofiltrosc">
-            <!--
-            <po-button p-tooltip="Consulta Emergencial"                  p-icon="po-icon po-icon-oil-analysis" p-label="Consulta Emergencial"  (p-click)="ConsultaEmergencial()" p-danger="true"></po-button>
-            <po-button p-tooltip="Consulta de Saldo Item Data"           p-icon="po-icon po-icon-pushcart"     p-label="CE0830"   (p-click)="AbrirTelaTOTVS('cep/ce0830.w')" p-kind="primary" ></po-button>
-            <po-button p-tooltip="Consulta Analise Critica Planejamento" p-icon="po-icon po-icon-pallet-full"  p-label="ESPP034"  (p-click)="AbrirTelaTOTVS('esp/espp034.w')" p-kind="primary"></po-button>
-            -->
-        
-            
-        <po-button [p-disabled]="lDisable" p-tooltip="Efetivar Arquivo"       p-icon="bi bi-send-arrow-down"        p-label="Efetivar"       (p-click)="onEfetivarArquivo()" p-kind="primary"> </po-button>
-        <po-button p-tooltip="Atualizar Tela"         p-icon="bi bi-arrow-counterclockwise" p-label="Atualizar Tela" (p-click)="onAtualizar()"       p-kind="primary"> </po-button>
-        
-        <po-button p-tooltip="Baixar Dados no Excel"  p-icon="bi bi-download"          p-label="Baixar Excel" (p-click)="this.onExportarExcel()" p-kind="primary"> </po-button>
-        
-        <po-button p-tooltip="CD0903"         p-icon="po-icon po-icon-pushcart"     p-label="CD0903" (p-click)="AbrirTelaTOTVS('cdp/cd0903.w')" p-kind="primary" ></po-button>
-
-        <po-button p-tooltip="Consulta Itens"         p-icon="bi bi-zoom-in"           p-label="Consulta Itens"  (p-click)="ConsultaItens()" p-danger="true"></po-button>
-
-    
+        <po-button p-tooltip="Baixar Dados no Excel"  p-icon="bi bi-download"     p-label="Baixar Excel"          (p-click)="this.onExportarExcel()" p-kind="primary"> </po-button>
+        <po-button p-tooltip="Libera Mensal"          p-icon="bi bi-unlock"       p-label="Libera Mensal"         (p-click)="this.onExportarExcel()" p-kind="primary"> </po-button>
+        <po-button p-tooltip="Consulta de ENC"        p-icon="bi bi-upc-scan"     p-label="Consulta de ENC"       (p-click)="onConsultaEnc()"        p-danger="true" > </po-button>
+        <po-button p-tooltip="Recebimento do ORACLE"  p-icon="bi bi-zoom-in"      p-label="Recebimento do ORACLE" (p-click)="onOracle()"             p-danger="true" > </po-button>
     </div>
   </div>
   
   <div class="grid">
       <!--<po-loading-overlay *ngIf="loadTela===true" [p-text]="labelLoadTela" [p-screen-lock]="true"></po-loading-overlay>-->
       <!--<p style="font-size: 20px; font-weight: bold"><po-divider p-label="DADOS IMPORTADOS DO ARQUIVO"></po-divider></p>-->
+      <p style="font-size: 15px; font-weight: bold; margin-bottom: -40px;">Total de Registros: {{this.total}}</p>
+      <p style="font-size: 15px; display: flex; justify-content: flex-end; margin-right: 260px; margin-bottom: -52px;">
+        
+        <po-button  p-tooltip="Pesquisa Avançada"  p-icon="bi bi-funnel"     p-label=""  (p-click)="onFiltroAvancado()" p-kind="primary"> </po-button>
+      </p>
+
+      
       <po-table #ttDadosIntegra
                 [p-items]="lista" 
                 [p-columns]="colunas"
@@ -49,8 +97,7 @@
                 [p-loading]="loadTela"
                 (p-show-more)="loadMoreItens()"
                 [p-show-more-disabled]="disableShowMore" 
-                >
-                            
+                >            
         <ng-template p-table-cell-template let-column="column" let-row="row">
             @if(column.property === 'opcao'){
                 <div class="menuGrid">
@@ -59,6 +106,7 @@
             }
         </ng-template>
         </po-table>
+        <p style="margin-top: 10px;"></p>
         <po-table #ttDadosError
                 [p-items]="listaError" 
                 [p-columns]="colunasError"
@@ -69,7 +117,7 @@
                 [p-hide-columns-manager]="true" 
                 p-container="true"
                 [p-single-select]="true"
-                [p-selectable]="true"
+                [p-selectable]="false"
                 [p-literals]="customLiterals"
                 [p-height]="alturaError" 
                 [p-loading]="loadDadosError"
@@ -95,4 +143,27 @@
         </div>
       </form>
     -->
+  </po-modal>
+
+  <po-modal #telaFiltroAvancado p-title="Filtro Avançado"
+                                p-size="md" 
+                                p-click-out="false" 
+                                [p-hide-close]="true"
+                                [p-primary-action]="acaoConfirmarFiltro" 
+                                [p-secondary-action]="acaoCancelarFiltro">
+      
+      <form [formGroup]="form">
+        
+          <div class="filtroAvancado">
+         
+            <dn-range [cLabel]="filtro.cLabelCodEstabel" [(cini)]="filtro.valEstabIni"   [(cfim)]="filtro.valEstabFim"   type="text"   cmask="AAA"></dn-range>
+            <dn-range [cLabel]="filtro.cLabelSerie"      [(cini)]="filtro.valSerieIni"   [(cfim)]="filtro.valSerieFim"   type="text"   cmask="AAA"></dn-range>
+            <dn-range [cLabel]="filtro.cLabelOsDocto"    [(cini)]="filtro.valOsDoctoIni" [(cfim)]="filtro.valOsDoctoFim" type="number" cmask="0000000"></dn-range>
+            <dn-range [cLabel]="filtro.cLabelItem"       [(cini)]="filtro.valItemIni"    [(cfim)]="filtro.valItemFim"    type="text"   cmask="AAAAAAAAAAAAAAAA"></dn-range>
+            <dn-range [cLabel]="filtro.cLabelEnc"        [(cini)]="filtro.valEncIni"     [(cfim)]="filtro.valEncFim"     type="number" cmask="000000000000"></dn-range>
+   
+          </div>        
+
+      </form>
+
   </po-modal>

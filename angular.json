@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "importdadositens": {
+    "monitorintegracao": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/importdadositens",
+            "outputPath": "dist/monitorintegracao",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -73,10 +73,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "importdadositens:build:production"
+              "buildTarget": "monitorintegracao:build:production"
             },
             "development": {
-              "buildTarget": "importdadositens:build:development"
+              "buildTarget": "monitorintegracao:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "importdadositens:build"
+            "buildTarget": "monitorintegracao:build"
           }
         },
         "test": {

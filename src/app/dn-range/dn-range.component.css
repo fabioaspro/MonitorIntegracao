@@ -1,0 +1,22 @@
+.range{
+    display: flex;
+    flex-direction: column;
+}
+ 
+.conteudo{
+    display: flex;
+}
+ 
+.border{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: gray;
+    background-color: lightgrey;
+    border: 1px solid black;
+    border-radius: 0;
+    width: 90px;
+    margin-left:-4px;
+    margin-right: -4px;
+    z-index: 99;
+}

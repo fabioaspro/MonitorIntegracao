@@ -4,18 +4,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AfterViewInit, ChangeDetectorRef, Component, inject, OnInit, viewChild, ViewChild, } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { PoUploadComponent, PoModule, PoUploadFile, PoTableColumn, PoTableModule, PoButtonModule, PoMenuItem, PoMenuModule, PoModalModule, PoPageModule, PoToolbarModule, PoTableAction, PoModalAction, PoDialogService, PoNotificationService, PoFieldModule, PoDividerModule, PoTableLiterals, PoTableComponent, PoUploadLiterals, PoModalComponent, } from '@po-ui/ng-components';
 import { ServerTotvsService } from '../services/server-totvs.service';
 import { ExcelService } from '../services/excel-service.service';
 import { escape } from 'querystring';
 import { environment } from '../environments/environment'
-import { format } from 'path';
-import { DnRangeComponent } from "../dn-range/dn-range.component";
-import { error } from 'console';
 
 @Component({
-  selector: 'app-tela',
+  selector: 'app-tela-oracle',
   standalone: true,
   imports: [
     CommonModule,
@@ -31,14 +28,13 @@ import { error } from 'console';
     PoMenuModule,
     PoPageModule,
     HttpClientModule,
-    DnRangeComponent
-],
-  templateUrl: './tela.component.html',
-  styleUrl: './tela.component.css'
+  ],
+  templateUrl: './tela-oracle.component.html',
+  styleUrl: './tela-oracle.component.css'
 })
 
 
-export class TelaComponent {
+export class TelaOracleComponent {
 
   private srvTotvs = inject(ServerTotvsService);
   private srvNotification = inject(PoNotificationService);
@@ -49,10 +45,6 @@ export class TelaComponent {
   private formB = inject(FormBuilder);
 
   //Variaveis
-  lPendente: boolean = true
-  lEnviado: boolean = true
-  dtIni: string = ''
-  dtFim: string = ''
   labelLoadTela: string = ''
   loadTela: boolean = false
   loadDadosError: boolean = false
@@ -74,35 +66,6 @@ export class TelaComponent {
   pageSize = 20
   disableShowMore = false
 
-  //Data do Buscar
-  dataIni!: Date
-  dataFim!: Date
-  total = 0
-
-  //Filtros Avançados
-  filtro = {
-    
-    valEstabIni: "",
-    valEstabFim: "ZZZ",
-    cLabelCodEstabel: "Estabelecimento",
-
-    valSerieIni: "",
-    valSerieFim: "ZZZ",
-    cLabelSerie: "Série",
-
-    valOsDoctoIni: "0",
-    valOsDoctoFim: "9999999",
-    cLabelOsDocto: "OS/Nota",
-
-    valItemIni: "",
-    valItemFim: "ZZZZZZZZZZZZZZZZ",
-    cLabelItem: "Item",
-    
-    valEncIni: "0",
-    valEncFim: "999999999999",
-    cLabelEnc: 'ENC'
-  }
-  
   /*headersTotvs = {    
     'Authorization': 'Basic c3VwZXI6cHJvZGllYm9sZDEx',
     'CompanyId': '1'
@@ -117,10 +80,11 @@ export class TelaComponent {
   @ViewChild('upload') poUpload!: PoUploadComponent;
   @ViewChild('ttDadosIntegra') GridIntegraDados!: PoTableComponent;
   @ViewChild('telaAltera', { static: true }) telaAltera:  | PoModalComponent  | undefined;
-  @ViewChild('telaFiltroAvancado', { static: true }) telaFiltroAvancado:  | PoModalComponent  | undefined;
 
   //Para não fixar a URL
   _url = environment.totvs_url + "/addFiles";
+  
+  
 
   //---Grid
   colunas!: PoTableColumn[]
@@ -146,20 +110,13 @@ export class TelaComponent {
 
   //Formulario
   public form = this.formImport.group({
-    //let hoje = new Date()
-    //let toDate = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 1);
-    
-    dtIni: ['', Validators.required],
-    dtFim: ['', Validators.required],
-    //dtFim: ['2025-04-16', Validators.required],
-    //dtIni: new FormControl(new Date(new Date().setDate(new Date().getDate() - 30))),
-    //dtFim: new FormControl(new Date(new Date().setDate(new Date().getDate()))),
-    cIntegra: ['Todas as Integrações', Validators.required],
-    lPendente: new FormControl(true), //Marca inicial como True
-    lEnviado:  new FormControl(false)
+    cChave: ['', Validators.required],
+    //codFilial: ['', Validators.required],
+    //numRR: ['', Validators.required],
+    //itCodigo: [''],
+    //tpBusca: [2, Validators.required],
   }); 
   
-
 
   public formAltera = this.formB.group({
     "qt-troca": [0, Validators.required],
@@ -183,12 +140,8 @@ export class TelaComponent {
   }*/
 
     changeOptions(event: any): void {
-      if(event.idBatch !== null){
-        this.ChamaObterDadosErrorEsaa052(event.idBatch) //1
-      }
-      else {
-
-      }
+      
+      this.ChamaObterDadosErrorEsaa068(event.idBatch)
       /*
       if (type === 'new') {
         //this.itemsSelected.push({
@@ -238,40 +191,93 @@ export class TelaComponent {
 
   ngOnInit(): void {
 
-    let hoje = new Date()
-    let toDate = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - 30);
-    
-    this.dataIni = toDate
-    this.dataFim = new Date()
-    
     //Colunas do grid
-    this.colunas = this.srvTotvs.obterColunasEsaa052()
-    this.colunasError = this.srvTotvs.obterColunasErrorEsaa052()
-    this.ChamaObterDadosPagEsaa052()
+    this.colunas = this.srvTotvs.obterColunasEsaa068()
+    this.colunasError = this.srvTotvs.obterColunasErrorEsaa068()
 
   }
 
   onConsultaEnc(){
 
     this.router.navigate(['tela-enc'])
+    
+  }
+  loadMoreItens(){
+
+    this.labelLoadTela = "Carregando Dados"
+     
+    this.loadTela = true
+    this.desabilitaForm()
+    let paramsTela: any = { items: this.form.value, page: this.page, pageSize: this.pageSize }
+
+    this.srvTotvs.ObterDadosPagEsaa068(paramsTela).subscribe({
+      next: (response: any) => {
+        
+        this.srvNotification.success('Dados listados com sucesso !')
+        //this.lista = response.items
+        this.loadTela = false
+        this.lista = this.page === 1 ? response.items : [...this.lista, ...response.items]
+
+        this.disableShowMore = response.items.length < this.pageSize
+        this.page++;
+        this.habilitaForm()
+        console.log(this.lista)
+        this.ChamaObterDadosErrorEsaa068(this.lista[0].idBatch)
+      },
+      error: (e) => {
+        //this.srvNotification.error('Ocorreu um erro ObterDadosPag: ' + e)
+        this.loadTela = false
+        this.habilitaForm()
+      },
+    })
+    /*
+    this.labelLoadTela = "Carregando Dados..."
+    this.loadTela = true
+    this.desabilitaForm()
+    let paramsTela: any = { items: this.form.value }
+    //Chamar o servico
+    this.srvTotvs.ObterDados(paramsTela).subscribe({
+      next: (response: any) => {
+        this.srvNotification.success('Dados listados com sucesso !')
+        this.lista = response.items
+        this.lista.sort(this.srvTotvs.ordenarCampos(['DtHrInc']))        
+        this.loadTela = false
+        this.habilitaForm()
+        this.ChamaObterDadosError(this.lista[0].idBatch)
+      },
+      error: (e) => {
+        //this.srvNotification.error('Ocorreu um erro ObterDados: ' + e)
+        this.loadTela = false
+        this.habilitaForm()
+      },
+    }) 
+    */
+
   }
 
-  
+  ChamaObterDadosPagEsaa068(){
+    this.itensPaginados = []
+    this.page = 1
+    this.pageSize = 1000
+    this.lista = []
+    this.loadMoreItens()
+  }
 
-  ChamaObterDadosErrorEsaa052(iId: any){
+  ChamaObterDadosErrorEsaa068(iId: any){
 
+    //this.labelLoadTela = "Carregando Erros..."
+    //this.loadTela = true
     this.loadDadosError = true
     this.desabilitaForm()
-    let paramsID: any = { items: {idBatch: iId } }
-
+    let paramsID: any = { items: {idBatch: iId }}
     //Chamar o servico
-    
-    this.srvTotvs.ObterDadosErrorEsaa052(paramsID).subscribe({
+    this.srvTotvs.ObterDadosErrorEsaa068(paramsID).subscribe({
       next: (response: any) => {
         //this.srvNotification.success('Erros listados com sucesso !')
         this.loadDadosError = false
+        //console.log(response)
         this.listaError = response.items
-        //this.listaError.sort(this.srvTotvs.ordenarCampos(['idBatch']))        
+        this.listaError.sort(this.srvTotvs.ordenarCampos(['idBatch']))        
         
         this.habilitaForm()
       },
@@ -281,96 +287,32 @@ export class TelaComponent {
         this.habilitaForm()
       },
     }) 
+
   }
 
-  ChamaObterDadosEsaa052(){
+  ChamaObterDadosEsaa068(){
 
     this.labelLoadTela = "Carregando Dados..."
     this.loadTela = true
     this.desabilitaForm()
     let paramsTela: any = { items: this.form.value }
-
     //Chamar o servico
-    this.srvTotvs.ObterDadosEsaa052(paramsTela).subscribe({
+    this.srvTotvs.ObterDadosEsaa068(paramsTela).subscribe({
       next: (response: any) => {
-        //this.srvNotification.success('Dados listados com sucesso !')
-        this.total = response.items.length
-        this.lista = response.items        
+        this.srvNotification.success('Dados listados com sucesso !')
+        this.lista = response.items
         this.lista.sort(this.srvTotvs.ordenarCampos(['DtHrInc']))        
         this.loadTela = false
         this.habilitaForm()
-        this.ChamaObterDadosErrorEsaa052(this.lista[0].idBatch)
+        this.ChamaObterDadosErrorEsaa068(this.lista[0].idBatch)
       },
       error: (e) => {
         //this.srvNotification.error('Ocorreu um erro ObterDados: ' + e)
         this.loadTela = false
         this.habilitaForm()
       },
-    })
-  }
+    }) 
 
-  ChamaObterDadosPagEsaa052(){
-    this.itensPaginados = []
-    this.page = 1
-
-    const dtIni = new Date(this.dataIni)
-    const dtFim = new Date(this.dataFim)
-
-    const diffMs = dtFim.getTime() - dtIni.getTime() //Diferença em milessegundos
-    const diffDias = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
-
-    //console.log(diffDias)
-    if (diffDias <= 35) {
-      this.pageSize = 500
-    }
-    else {
-      this.pageSize = 100
-    }
-    this.lista = []
-
-    this.loadMoreItens()
-  }
-  
-  loadMoreItens(){
-
-    this.labelLoadTela = "Carregando Dados"
-    this.loadTela = true
-    this.desabilitaForm()
-    let paramsTela: any = { items: this.form.value, filtro: this.filtro, page: this.page, pageSize: this.pageSize }
-    
-    this.srvTotvs.ObterDadosPagEsaa052(paramsTela).subscribe({
-      next: (response: any) => {
-        
-        //this.srvNotification.success('Dados listados com sucesso !')
-        this.loadTela = false
-        this.habilitaForm()
-        if (response.total === 0) return
-
-        //this.lista = response.items
-        this.lista = this.page === 1 ? response.items : [...this.lista, ...response.items]
-        this.total = this.lista.length
-        
-        this.disableShowMore = response.items.length < this.pageSize
-        this.page++;
-        
-        
-        this.ChamaObterDadosErrorEsaa052(this.lista[0].idBatch)
-        
-        /* 
-        this.srvNotification.success('Dados listados com sucesso !')
-        this.lista = response.items        
-        this.lista.sort(this.srvTotvs.ordenarCampos(['DtHrInc']))        
-        this.loadTela = false
-        this.habilitaForm()
-        this.ChamaObterDadosErrorEsaa052(this.lista[0].idBatch)
-        */
-      },
-      error: (e) => {
-        //this.srvNotification.error('Ocorreu um erro ObterDadosPag: ' + e)
-        this.loadTela = false
-        this.habilitaForm()
-      },
-    })
   }
 
   public habilitaForm() {
@@ -384,8 +326,6 @@ export class TelaComponent {
     //this.form.controls['itCodigo'].enable()
   }
 
-  OnSeleciona(event: any): void {}
-  
   public desabilitaForm() {
 
     this.lBotao = true
@@ -397,11 +337,27 @@ export class TelaComponent {
     //this.form.controls['itCodigo'].disable()
   }
 
-  onOracle() {
+  onTotvs() {
 
-    this.router.navigate(['tela-oracle'])
+    this.router.navigate(['tela'])
 
   }
+
+  readonly acaoAlterarLinha: PoModalAction = {
+    label: 'Salvar',
+    action: () => {
+      //this.alterarOrdem()
+    },
+   
+    disabled: !this.formAltera.valid,
+  };
+
+  readonly acaoCancelarLinha: PoModalAction = {
+    label: 'Cancelar',
+    action: () => {
+      this.telaAltera?.close();
+    },
+  };
 
   // Método para selecionar programaticamente uma linha
   selecionarLinha(id: number) {
@@ -539,48 +495,10 @@ export class TelaComponent {
 
   }
 
-  //Detalhes do Grid
   onAlterarGrid(obj:any){
     this.objSelecionado = obj
     this.telaAltera?.open()
   }
-  readonly acaoAlterarLinha: PoModalAction = {
-    label: 'Salvar',
-    action: () => {
-      //this.alterarOrdem()
-    },
-   
-    disabled: !this.formAltera.valid,
-  };
-
-  readonly acaoCancelarLinha: PoModalAction = {
-    label: 'Cancelar',
-    action: () => {
-      this.telaAltera?.close();
-    },
-  };
-
-  //Filtro Avançado
-  onFiltroAvancado(){
-    this.telaFiltroAvancado?.open()
-  }
-
-  readonly acaoConfirmarFiltro: PoModalAction = {
-    label: 'Aplicar',
-    action: () => {
-      this.telaFiltroAvancado?.close()
-      this.ChamaObterDadosPagEsaa052()
-    },
-   
-    disabled: !this.formAltera.valid,
-  };
-
-  readonly acaoCancelarFiltro: PoModalAction = {
-    label: 'Cancelar',
-    action: () => {
-      this.telaFiltroAvancado?.close();
-    },
-  };
 
   onAtualizar(){
 
@@ -673,21 +591,22 @@ export class TelaComponent {
   }*/
   //---------------------------------------------------------------- Exportar lista detalhe para excel
   public onExportarExcel() {
-    let titulo = "IMPORTAÇÃO DE DADOS DO ITEM" //this.tituloTela.split(':')[0]
-    let subTitulo = "DADOS DO ITEM" //this.tituloTela.split(':')[1]
+    let titulo = "MONITOR DE INTEGRAÇÃO" //this.tituloTela.split(':')[0]
+    let subTitulo = "RECEBIMENTO DO ORACLE" //this.tituloTela.split(':')[1]
     this.loadExcel = true
 
     //let valorForm: any = { valorForm: this.form.value }
 
-    this.srvExcel.exportarParaExcel('IMPORTAÇÃO DE DADOS: ' + titulo.toUpperCase(),
+    this.srvExcel.exportarParaExcel('INTEGRAÇÃO: ' + titulo.toUpperCase(),
       subTitulo.toUpperCase(),
       this.colunas,
       this.lista,
-      'Import_Itens',
+      'Integracao',
       'Plan1')
 
     this.loadExcel = false;
   }
+
   //---Listar registros grid
   listar() {
     this.loadTela = true;
@@ -695,7 +614,6 @@ export class TelaComponent {
     this.srvTotvs.Obter().subscribe({
       next: (response: any) => {
         if (response === null) return
-        
         this.lista = response.items
         this.loadTela = false
       },

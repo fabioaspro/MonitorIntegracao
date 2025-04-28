@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import { PoDividerModule, PoModule, PoTableColumn, PoTableModule, PoButtonModule, PoMenuItem, PoMenuModule, PoModalModule, PoPageModule, PoToolbarModule, PoTableAction, PoTableComponent,} from '@po-ui/ng-components';
 import { ServerTotvsService } from './services/server-totvs.service';
+import { NgxMaskDirective } from 'ngx-mask';
 
 
 @Component({
@@ -23,7 +24,7 @@ import { ServerTotvsService } from './services/server-totvs.service';
     PoToolbarModule,
     PoMenuModule,
     PoPageModule,
-    HttpClientModule,
+    HttpClientModule
   ],templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
@@ -61,8 +62,9 @@ export class AppComponent {
     //--- Titulo Tela
     //this.srvTotvs.EmitirParametros({estabInfo:'', tecInfo:'', processoInfo:'', tituloTela: 'HTMLA41 - PARÂMETROS DA FILIAL', ard: false})
 
-    //Colunas do grid
-    this.colunas = this.srvTotvs.obterColunas()
+    //Colunas do esaa052
+    this.colunas = this.srvTotvs.obterColunasErrorEsaa052()
+    this.colunas = this.srvTotvs.obterColunasErrorEsaa068()
 
     //Tempo Mensagem
     //this.srvNotification.setDefaultDuration(3000)
