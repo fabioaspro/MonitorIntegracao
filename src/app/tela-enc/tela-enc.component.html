@@ -1,0 +1,74 @@
+<po-toolbar p-title="MONITOR DE INTEGRAÇÃO - CONSULTA DE ENC"></po-toolbar>
+<div class="cabec" >
+    <div class="tipoBusca">
+        <dn-navega [vaPara]="gotoCampos"
+             [form]="this.form"
+             [apenasConsulta]="false"
+             (funcao)="acao($event)"
+             (goto)="goto($event)">
+        </dn-navega>
+    </div>
+    
+    <div class="campofiltrosc">
+        <po-button p-tooltip="Baixar Dados no Excel"  p-icon="bi bi-download"  p-label="Baixar Excel"      (p-click)="this.onExportarExcel()" p-kind="primary"> </po-button>
+        <po-button p-tooltip="Integração ORACLE"      p-icon="bi bi-zoom-in"   p-label="Integração ORACLE" (p-click)="onOracle()" p-danger="true" ></po-button>
+        <po-button p-tooltip="Integração TOTVS"       p-icon="bi bi-zoom-in"   p-label="Integração TOTVS"  (p-click)="onTotvs()" p-danger="true"></po-button>
+    </div>
+  </div>
+  
+  <div class="grid">
+      
+    <form [formGroup]="form">
+    
+        <po-input #estab formControlName="cod-estabel" p-label="Estab"> </po-input>
+        <po-input formControlName="CodFilial"   p-label="Filial"></po-input>
+        <po-input formControlName="nr-enc"      p-label="ENC">   </po-input>
+        
+        <po-input #def formControlName="DefInd"      p-label="Defeito">   </po-input>
+        <po-input formControlName="atividade"   p-label="Atividade"> </po-input>
+    </form>
+        
+  </div>
+
+    <po-modal #ChamaZoom p-size="100px" p-title="ZOOM DE ITENS">
+
+        <form [formGroup]="formTelaZoom">
+            <div class="campofiltros">
+                <po-input p-mask="XX.XXX.XXXXX-XX" style="width: 200px;" class="po-lg-6" name="znr-enc" p-label="Item"
+                    p-required formControlName="znr-enc" (keyup.enter)="buscarEnc()"></po-input>
+                <po-button p-label="Buscar" (p-click)="buscarEnc()"></po-button>
+            </div>
+
+            <po-table #ttZoom [p-items]="registrosZoom" [p-columns]="colunasZoom" [p-actions]="opcoesGridZoom"
+                [p-actions-right]="true" [p-striped]="true" [p-sort]="true" [p-single-select]="true" [p-selectable]="true"
+                [p-height]="300" [p-loading]="loadTela">
+            </po-table>
+
+        </form>
+
+        <po-modal-footer [p-disabled-align]="false">
+            <po-button p-label="true" p-label="Cancelar" (p-click)="btCancelar()"> </po-button>
+            <po-button p-kind="primary" p-label="Aplicar" (p-click)="btAplicar()"> </po-button>
+        </po-modal-footer>
+
+
+    </po-modal>
+
+  <po-modal #telaAltera p-title="Altere os Dados do Item"
+                              p-size="auto" 
+                              p-click-out="false" 
+                              [p-hide-close]="true"
+                              [p-primary-action]="acaoAlterarLinha" 
+                              [p-secondary-action]="acaoCancelarLinha">
+      <!--
+      <form [formGroup]="formAltera">
+        <div class="po-md-6">
+            <po-number name="PesoBruto"   formControlName="PesoBruto"   p-label="Peso Bruto"   p-step="1" [p-min]="0"></po-number>
+            <po-number name="PesoLiquido" formControlName="PesoLiquido" p-label="Peso Líquido" p-step="1" [p-min]="0"></po-number>
+            <po-number name="Altura"      formControlName="Altura"      p-label="Altura"       p-step="1" [p-min]="0"></po-number>
+            <po-number name="Largura"     formControlName="Largura"     p-label="Largura"      p-step="1" [p-min]="0"></po-number>
+            <po-number name="Comprimento" formControlName="Comprimento" p-label="Comprimento"  p-step="1" [p-min]="0"></po-number>
+        </div>
+      </form>
+    -->
+  </po-modal>

@@ -1,0 +1,21 @@
+<!--
+<div class="range">
+        
+    <div class="conteudo">
+        <po-input name="inicial" [p-label]="cLabel" (type)="tipo" [(ngModel)]="inicial" p-format="ZZZ" (ngModelChange)="onInicialChange($event)"> </po-input>
+        <div class="border po-input">até</div>
+        <po-input name="final"   p-label=" "        (type)="tipo" [(ngModel)]="final"   p-format="ZZZ" (ngModelChange)="onFinalChange($event)">   </po-input>
+    </div>
+
+</div>
+-->
+
+<div class="range">
+    <label>{{cLabel}}</label>
+    <div class="conteudo">
+        <!--<input [type]="tipo" [(ngModel)]="value.inicial" class="po-input" />-->
+        <input class="po-input" [mask]="cmask" [type]="tipo" [(ngModel)]="cini" (ngModelChange)="retorno()"/> 
+        <div class="border">até</div>
+        <input class="po-input" [mask]="cmask" [type]="tipo" [(ngModel)]="cfim" (ngModelChange)="retorno()"/>
+    </div>
+</div>
