@@ -1,12 +1,12 @@
 <po-toolbar p-title="MONITOR DE INTEGRAÇÃO - CONSULTA DE ENC"></po-toolbar>
 <div class="cabec" >
     <div class="tipoBusca">
-        <form [formGroup]="form">
-            <div class="campofiltros" >
-                <po-input name="cChave" formControlName="cChave"  style="width: 300px;" p-label="Chave">       </po-input>
-                <po-button p-tooltip="Efetuar Busca de ENC" name='btBusca' [p-disabled]="lBotao" style="margin-right: 50px" p-icon="bi bi-zoom-in" p-kind="primary" (p-click)="ChamaObterDadosEsaa068()" p-label="Buscar" ></po-button>
-            </div>
-        </form>
+        <dn-navega [vaPara]="gotoCampos"
+             [form]="this.form"
+             [apenasConsulta]="false"
+             (funcao)="acao($event)"
+             (goto)="goto($event)">
+        </dn-navega>
     </div>
     
     <div class="campofiltrosc">
@@ -17,38 +17,42 @@
   </div>
   
   <div class="grid">
-      <!--<po-loading-overlay *ngIf="loadTela===true" [p-text]="labelLoadTela" [p-screen-lock]="true"></po-loading-overlay>-->
-      <!--<p style="font-size: 20px; font-weight: bold"><po-divider p-label="DADOS IMPORTADOS DO ARQUIVO"></po-divider></p>-->
-      <po-table #ttDadosIntegra
-                [p-items]="lista" 
-                [p-columns]="colunas"
-                [p-striped]="true"
-                p-sort="true"
-                [p-sort]="true"
-                [p-hide-table-search]="false"
-                [p-hide-columns-manager]="true"
-                p-container="true"
-                [p-literals]="customLiterals"
-                [p-single-select]="true"
-                [p-selectable]="true"
-                (p-selected)="onChangeOptions($event)"
-                [p-height]="alturaGrid"
-                [p-loading]="loadTela"
-                >
-                <!--
-                (p-show-more)="loadMoreItens()"
-                [p-show-more-disabled]="disableShowMore" 
-                -->            
-        <ng-template p-table-cell-template let-column="column" let-row="row">
-            @if(column.property === 'opcao'){
-                <div class="menuGrid">
-                <div><button class="btn"  (click)="onAlterarGrid(row)"><p><i class="bi bi-eraser-fill"></i></p></button></div>
-                </div>
-            }
-        </ng-template>
-        </po-table>
+      
+    <form [formGroup]="form">
+    
+        <po-input #estab formControlName="cod-estabel" p-label="Estab"> </po-input>
+        <po-input formControlName="CodFilial"   p-label="Filial"></po-input>
+        <po-input formControlName="nr-enc"      p-label="ENC">   </po-input>
+        
+        <po-input #def formControlName="DefInd"      p-label="Defeito">   </po-input>
+        <po-input formControlName="atividade"   p-label="Atividade"> </po-input>
+    </form>
         
   </div>
+
+    <po-modal #ChamaZoom p-size="100px" p-title="ZOOM DE ITENS">
+
+        <form [formGroup]="formTelaZoom">
+            <div class="campofiltros">
+                <po-input p-mask="XX.XXX.XXXXX-XX" style="width: 200px;" class="po-lg-6" name="znr-enc" p-label="Item"
+                    p-required formControlName="znr-enc" (keyup.enter)="buscarEnc()"></po-input>
+                <po-button p-label="Buscar" (p-click)="buscarEnc()"></po-button>
+            </div>
+
+            <po-table #ttZoom [p-items]="registrosZoom" [p-columns]="colunasZoom" [p-actions]="opcoesGridZoom"
+                [p-actions-right]="true" [p-striped]="true" [p-sort]="true" [p-single-select]="true" [p-selectable]="true"
+                [p-height]="300" [p-loading]="loadTela">
+            </po-table>
+
+        </form>
+
+        <po-modal-footer [p-disabled-align]="false">
+            <po-button p-label="true" p-label="Cancelar" (p-click)="btCancelar()"> </po-button>
+            <po-button p-kind="primary" p-label="Aplicar" (p-click)="btAplicar()"> </po-button>
+        </po-modal-footer>
+
+
+    </po-modal>
 
   <po-modal #telaAltera p-title="Altere os Dados do Item"
                               p-size="auto" 

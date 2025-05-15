@@ -13,7 +13,8 @@ const headersTotvs = new HttpHeaders(environment.totvs_header)
 })
 export class ServerTotvsService {
   private reg!:any;
-  _url = environment.totvs_url;
+  _url = environment.totvs_url
+  _urlNavega = environment.totvs_url_navega
   
   constructor(private http: HttpClient ) { }
 
@@ -98,6 +99,12 @@ export class ServerTotvsService {
       { property: 'DtHrError',     label: "Dt/Hr Error", type:'date', format: "dd/MM/yyyy"},
     ];
   }
+
+  //---------------------- DN-NAVEGA
+  public ObterRegistro(params?: any){
+    return this.http.post(`${this._urlNavega}`, params, {headers:headersTotvs}).pipe(take(1))
+  }
+
   //---------------------- Obter Lista Completa
   public UpdloadArquivo(params?: any){
     return this.http.post(`${this._url}/addFiles`, params, {headers:headersTotvs}).pipe(take(1))

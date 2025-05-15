@@ -17,7 +17,7 @@
     border-radius: 4px; 
     padding:10px; 
     height: 100px;
-    width: 70%;
+    width: 30%;
     background-color: whitesmoke;
   
 }
@@ -37,7 +37,7 @@
     border-radius: 4px;
     padding: 10px 0 10px 20px; 
     height: 100px;
-    width: 30%;
+    width: 70%;
     background-color: whitesmoke;
     z-index: 99;
 }

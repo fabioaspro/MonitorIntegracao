@@ -616,7 +616,6 @@ export class TelaComponent {
     this.labelLoadTela = "Calculando Prioridade"
     this.loadTela = true
     this.loadTela = false
-
     
     /*
     this.desabilitaForm()
@@ -688,6 +687,7 @@ export class TelaComponent {
 
     this.loadExcel = false;
   }
+
   //---Listar registros grid
   listar() {
     this.loadTela = true;

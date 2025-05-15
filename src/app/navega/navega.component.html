@@ -1,0 +1,46 @@
+<div class="navegacao">
+    <div class="goto" *ngIf="vaPara !==undefined">
+
+        <div style="display: flex;flex-direction: column;width: 170px;" *ngIf="vaPara.campo1 !==undefined" >
+            <label style="color: gray; font-size: 10;">{{vaPara.campo1.label}}</label>
+            <input class="po-input" [(ngModel)]="vaPara.campo1.value" [mask]="vaPara.campo1.mask"/>
+        </div>
+
+        <div style="display: flex;flex-direction: column;width: 170px;" *ngIf="vaPara.campo2 !==undefined">
+            <label style="color: gray; font-size: 10;">{{vaPara.campo2.label}}</label>
+            <input class="po-input" [(ngModel)]="vaPara.campo2.value" [mask]="vaPara.campo2.mask"/>
+        </div>
+
+        <div style="display: flex;flex-direction: column;width: 170px;" *ngIf="vaPara.campo3 !==undefined">
+            <label style="color: gray; font-size: 10;">{{vaPara.campo3.label}}</label>
+            <input class="po-input" [(ngModel)]="vaPara.campo3.value" [mask]="vaPara.campo3.mask"/>
+        </div>
+
+        <div style="display: flex; margin-top: 24px; gap:5px;">
+            <po-button p-icon="bi bi-check2" (p-click)="onClick('goto')" ></po-button> 
+            <po-button p-icon="bi bi-search" (p-click)="onClick('zoom')" ></po-button> 
+        </div>
+    </div>
+
+    <div class="direcoes">
+        <po-button p-icon="bi bi-chevron-bar-left"  (p-click)="onClick('first')" ></po-button> 
+        <po-button p-icon="bi bi-chevron-left"      (p-click)="onClick('prev')" ></po-button> 
+        <po-button p-icon="bi bi-chevron-right"     (p-click)="onClick('next')" ></po-button> 
+        <po-button p-icon="bi bi-chevron-bar-right" (p-click)="onClick('last')" ></po-button> 
+    </div>
+
+    <div class="controles" *ngIf="lsave===false && apenasConsulta===false">
+        <po-button p-icon="bi bi-plus"           p-label="Incluir"   p-kind="primary" (p-click)="onClick('inc')"></po-button> 
+        <po-button p-icon="bi bi-pencil-square"  p-label="Modificar"                  (p-click)="onClick('mod')"></po-button> 
+        <po-button p-icon="bi bi-trash"          p-label="Eliminar"  p-danger="true"  (p-click)="onClick('del')" ></po-button> 
+    </div> 
+
+    <div class="controles" *ngIf="lsave===true && apenasConsulta===false">
+        <po-button p-icon="bi bi-x-square" p-label="Cancelar"                  (p-click)="onClick('cancel')"></po-button> 
+        <po-button p-icon="bi bi-floppy"   p-label="Salvar"   p-kind="primary" (p-click)="onClick('save')"></po-button> 
+    </div>
+</div>
+
+
+
+
